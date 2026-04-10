@@ -1,11 +1,973 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+  <main id="app">
+
+    <!-- Progress bar -->
+    <div style="position:fixed;top:0;left:0;right:0;z-index:100;height:2px;background:#1c1c1c;">
+      <div id="progress-bar" style="height:100%;background:#e2e2e2;width:0%;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);"></div>
+    </div>
+
+    <!-- Back button -->
+    <button id="back-btn" class="back-btn" style="display:none;" aria-label="Volver">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      Volver
+    </button>
+
+    <!-- Quiz container -->
+    <div id="quiz" class="quiz-wrap">
+      <div class="quiz-inner">
+
+        <!-- Step 1 -->
+        <div class="step" id="step-1">
+          <div class="step-meta">
+            <span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot"></span>
+            <span class="step-counter">1 / 7</span>
+          </div>
+          <h2 class="step-title">¿Qué tipo de sitio necesitas?</h2>
+          <p class="step-sub">Esto nos ayuda a darte un estimado real.</p>
+          <div class="grid-2" id="site-type-options">
+            <button class="card" data-value="landing" data-label="Landing page">
+              <span class="card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              </span>
+              <span class="card-title">Landing page</span>
+              <span class="card-desc">Una página para convertir visitas</span>
+            </button>
+            <button class="card" data-value="brochure" data-label="Sitio corporativo">
+              <span class="card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+              </span>
+              <span class="card-title">Sitio corporativo</span>
+              <span class="card-desc">Presentación de empresa, 4–8 páginas</span>
+            </button>
+            <button class="card" data-value="ecommerce" data-label="Tienda en línea">
+              <span class="card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </span>
+              <span class="card-title">Tienda en línea</span>
+              <span class="card-desc">Catálogo, carrito y pagos</span>
+            </button>
+            <button class="card" data-value="webapp" data-label="Web app / Dashboard">
+              <span class="card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </span>
+              <span class="card-title">Web app / Dashboard</span>
+              <span class="card-desc">Lógica compleja, usuarios, datos</span>
+            </button>
+            <button class="card" data-value="blog" data-label="Blog / Portafolio">
+              <span class="card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </span>
+              <span class="card-title">Blog / Portafolio</span>
+              <span class="card-desc">Contenido, proyectos, artículos</span>
+            </button>
+            <button class="card" data-value="other" data-label="Algo diferente">
+              <span class="card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+              </span>
+              <span class="card-title">Algo diferente</span>
+              <span class="card-desc">Tengo una idea en mente</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step hidden" id="step-2">
+          <div class="step-meta">
+            <span class="step-dot"></span><span class="step-dot active"></span><span class="step-dot"></span>
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot"></span>
+            <span class="step-counter">2 / 7</span>
+          </div>
+          <h2 class="step-title">¿Cómo quieres el diseño?</h2>
+          <p class="step-sub">Piensa en qué tan personalizado necesitas que sea.</p>
+          <div class="list" id="design-options">
+            <button class="row" data-value="template" data-label="Plantilla adaptada">
+              <span class="row-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+              </span>
+              <span class="row-body">
+                <span class="row-title">Plantilla adaptada</span>
+                <span class="row-desc">Tomamos una base y la ajustamos a tu marca</span>
+              </span>
+              <span class="pill pill-green">Económico</span>
+            </button>
+            <button class="row" data-value="custom" data-label="Diseño a medida">
+              <span class="row-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+              </span>
+              <span class="row-body">
+                <span class="row-title">Diseño a medida</span>
+                <span class="row-desc">UI diseñada desde cero según tu identidad</span>
+              </span>
+              <span class="pill pill-amber">Intermedio</span>
+            </button>
+            <button class="row" data-value="premium" data-label="Diseño premium / Animado">
+              <span class="row-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </span>
+              <span class="row-body">
+                <span class="row-title">Diseño premium / Animado</span>
+                <span class="row-desc">Microinteracciones, scroll effects, personalidad</span>
+              </span>
+              <span class="pill pill-purple">Premium</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step hidden" id="step-3">
+          <div class="step-meta">
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot active"></span>
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot"></span>
+            <span class="step-counter">3 / 7</span>
+          </div>
+          <h2 class="step-title">¿Qué necesitas que haga tu sitio?</h2>
+          <p class="step-sub">Selecciona todo lo que aplique.</p>
+          <div class="grid-2" id="features-options">
+            <button class="card multi" data-value="contact_form" data-label="Formulario de contacto" data-price="500">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+              <span class="card-title">Formulario de contacto</span>
+            </button>
+            <button class="card multi" data-value="cms" data-label="Panel de contenido (CMS)" data-price="2000">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+              <span class="card-title">Panel de contenido</span>
+            </button>
+            <button class="card multi" data-value="auth" data-label="Login / Usuarios" data-price="3000">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <span class="card-title">Login / Usuarios</span>
+            </button>
+            <button class="card multi" data-value="payments" data-label="Pagos en línea" data-price="3500">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+              <span class="card-title">Pagos en línea</span>
+            </button>
+            <button class="card multi" data-value="multilang" data-label="Multiidioma" data-price="1500">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              <span class="card-title">Multiidioma</span>
+            </button>
+            <button class="card multi" data-value="seo" data-label="SEO avanzado" data-price="1000">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+              <span class="card-title">SEO avanzado</span>
+            </button>
+            <button class="card multi" data-value="analytics" data-label="Analytics / Métricas" data-price="500">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+              <span class="card-title">Analytics / Métricas</span>
+            </button>
+            <button class="card multi" data-value="chat" data-label="Chat / WhatsApp" data-price="800">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+              <span class="card-title">Chat / WhatsApp</span>
+            </button>
+          </div>
+          <button class="btn-next" id="features-next">Continuar</button>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step hidden" id="step-4">
+          <div class="step-meta">
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot"></span>
+            <span class="step-counter">4 / 7</span>
+          </div>
+          <h2 class="step-title">¿Para cuándo lo necesitas?</h2>
+          <p class="step-sub">El tiempo siempre impacta el costo.</p>
+          <div class="list" id="timeline-options">
+            <button class="row" data-value="urgent" data-label="Urgente (menos de 2 semanas)">
+              <span class="row-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="row-body">
+                <span class="row-title">Urgente</span>
+                <span class="row-desc">Menos de 2 semanas</span>
+              </span>
+              <span class="pill pill-red">+30%</span>
+            </button>
+            <button class="row" data-value="normal" data-label="Normal (1 mes)">
+              <span class="row-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+              <span class="row-body">
+                <span class="row-title">Normal</span>
+                <span class="row-desc">Alrededor de 1 mes</span>
+              </span>
+              <span class="pill pill-green">Sin cargo extra</span>
+            </button>
+            <button class="row" data-value="flexible" data-label="Sin prisa (más de 6 semanas)">
+              <span class="row-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="row-body">
+                <span class="row-title">Sin prisa</span>
+                <span class="row-desc">Más de 6 semanas</span>
+              </span>
+              <span class="pill pill-cyan">Posible descuento</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step hidden" id="step-5">
+          <div class="step-meta">
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot"></span><span class="step-dot active"></span><span class="step-dot"></span>
+            <span class="step-dot"></span>
+            <span class="step-counter">5 / 7</span>
+          </div>
+          <h2 class="step-title">¿Con qué presupuesto cuentas?</h2>
+          <p class="step-sub">Siendo honestos llegamos más lejos.</p>
+          <div class="list" id="budget-options">
+            <button class="row" data-value="small" data-label="Menos de $5,000 MXN">
+              <span class="row-body"><span class="row-title">Menos de $5,000 MXN</span></span>
+            </button>
+            <button class="row" data-value="medium" data-label="$5,000 – $15,000 MXN">
+              <span class="row-body"><span class="row-title">$5,000 – $15,000 MXN</span></span>
+            </button>
+            <button class="row" data-value="large" data-label="$15,000 – $40,000 MXN">
+              <span class="row-body"><span class="row-title">$15,000 – $40,000 MXN</span></span>
+            </button>
+            <button class="row" data-value="xlarge" data-label="Más de $40,000 MXN">
+              <span class="row-body"><span class="row-title">Más de $40,000 MXN</span></span>
+            </button>
+            <button class="row" data-value="unknown" data-label="No lo sé todavía">
+              <span class="row-body"><span class="row-title">No lo sé todavía</span></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step hidden" id="step-6">
+          <div class="step-meta">
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot active"></span>
+            <span class="step-dot"></span>
+            <span class="step-counter">6 / 7</span>
+          </div>
+          <h2 class="step-title">¿Necesitas algo más?</h2>
+          <p class="step-sub">Selecciona lo que aplique, o salta si no.</p>
+          <div class="grid-2" id="extras-options">
+            <button class="card multi" data-value="hosting" data-label="Hosting y dominio" data-price="1200">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              <span class="card-title">Hosting y dominio</span>
+            </button>
+            <button class="card multi" data-value="maintenance" data-label="Mantenimiento mensual" data-price="1500">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+              <span class="card-title">Mantenimiento mensual</span>
+            </button>
+            <button class="card multi" data-value="copywriting" data-label="Redacción de textos" data-price="2000">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+              <span class="card-title">Redacción de textos</span>
+            </button>
+            <button class="card multi" data-value="photos" data-label="Fotografía / Video" data-price="3000">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+              <span class="card-title">Fotografía / Video</span>
+            </button>
+            <button class="card multi" data-value="branding" data-label="Identidad de marca" data-price="4000">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></span>
+              <span class="card-title">Identidad de marca</span>
+            </button>
+            <button class="card multi" data-value="training" data-label="Capacitación" data-price="1000">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+              <span class="card-title">Capacitación</span>
+            </button>
+          </div>
+          <button class="btn-next" id="extras-next">Continuar</button>
+        </div>
+
+        <!-- Step 7: Contacto -->
+        <div class="step hidden" id="step-7">
+          <div class="step-meta">
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span>
+            <span class="step-dot active"></span>
+            <span class="step-counter">7 / 7</span>
+          </div>
+          <h2 class="step-title">Ya casi — ¿a quién le envío el estimado?</h2>
+          <p class="step-sub">Solo necesito tus datos para mostrarte el resultado.</p>
+          <form id="contact-form" novalidate>
+            <div class="field">
+              <label for="f-name">Tu nombre</label>
+              <input type="text" id="f-name" name="name" placeholder="¿Cómo te llamas?" autocomplete="name" />
+              <span class="field-err" id="name-error">Por favor ingresa tu nombre</span>
+            </div>
+            <div class="field">
+              <label for="f-email">Correo electrónico</label>
+              <input type="email" id="f-email" name="email" placeholder="tu@correo.com" autocomplete="email" />
+              <span class="field-err" id="email-error">Por favor ingresa un correo válido</span>
+            </div>
+            <div class="field">
+              <label for="f-msg">
+                ¿Algo más que quieras contarme sobre tu proyecto?
+                <span class="label-optional">opcional</span>
+              </label>
+              <textarea id="f-msg" name="message" placeholder="Cuéntame un poco más si quieres..." rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn-submit" id="submit-btn">
+              <span id="submit-text">Ver mi estimado</span>
+              <span id="submit-loading" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                Enviando…
+              </span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Results -->
+        <div class="step hidden" id="step-results">
+          <div id="results-content"></div>
+        </div>
+
+      </div>
+    </div>
+  </main>
 </Layout>
+
+<style>
+  .quiz-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+  }
+
+  .quiz-inner {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* Step meta / dots */
+  .step-meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 2rem;
+  }
+
+  .step-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    transition: background 0.3s;
+  }
+
+  .step-dot.active {
+    background: #e2e2e2;
+  }
+
+  .step-counter {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: #555;
+    letter-spacing: 0.05em;
+  }
+
+  /* Typography */
+  .step-title {
+    font-size: clamp(1.4rem, 3.5vw, 1.875rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-sub {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 1.75rem;
+    line-height: 1.5;
+  }
+
+  /* Cards grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #f0f0f0;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    font-family: inherit;
+  }
+
+  .card:hover {
+    border-color: #333;
+    background: #161616;
+  }
+
+  .card.selected {
+    border-color: #525252;
+    background: #1a1a1a;
+    box-shadow: inset 0 0 0 1px #525252;
+  }
+
+  .card-icon {
+    color: #555;
+    display: flex;
+    margin-bottom: 2px;
+  }
+
+  .card.selected .card-icon {
+    color: #e2e2e2;
+  }
+
+  .card-title {
+    font-size: 0.825rem;
+    font-weight: 500;
+    color: #d4d4d4;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.75rem;
+    color: #555;
+    line-height: 1.4;
+  }
+
+  /* List rows */
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .row {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 0.875rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    color: #f0f0f0;
+    font-family: inherit;
+    text-align: left;
+  }
+
+  .row:hover {
+    border-color: #333;
+    background: #161616;
+  }
+
+  .row.selected {
+    border-color: #525252;
+    background: #1a1a1a;
+    box-shadow: inset 0 0 0 1px #525252;
+  }
+
+  .row-icon {
+    color: #555;
+    flex-shrink: 0;
+    display: flex;
+  }
+
+  .row.selected .row-icon {
+    color: #d4d4d4;
+  }
+
+  .row-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+
+  .row-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #d4d4d4;
+  }
+
+  .row-desc {
+    font-size: 0.75rem;
+    color: #555;
+  }
+
+  /* Pills */
+  .pill {
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .pill-green  { background: #0d1f14; color: #4ade80; border: 1px solid #14532d; }
+  .pill-amber  { background: #1c1507; color: #fbbf24; border: 1px solid #451a03; }
+  .pill-purple { background: #130d1f; color: #a78bfa; border: 1px solid #2e1065; }
+  .pill-red    { background: #1f0d0d; color: #f87171; border: 1px solid #450a0a; }
+  .pill-cyan   { background: #0d1a1f; color: #67e8f9; border: 1px solid #083344; }
+
+  /* Buttons */
+  .btn-next {
+    background: #f0f0f0;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 8px;
+    padding: 0.65rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease;
+  }
+
+  .btn-next:hover { background: #fff; }
+
+  /* Contact form */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+
+  .field label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #999;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .label-optional {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #444;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+
+  .field input,
+  .field textarea {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 0.7rem 0.875rem;
+    color: #f0f0f0;
+    font-size: 0.875rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease;
+    resize: vertical;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    border-color: #444;
+  }
+
+  .field input.err,
+  .field textarea.err {
+    border-color: #7f1d1d;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: #3a3a3a;
+  }
+
+  .field-err {
+    font-size: 0.72rem;
+    color: #f87171;
+    display: none;
+  }
+
+  .field-err.show { display: block; }
+
+  .btn-submit {
+    width: 100%;
+    background: #f0f0f0;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 0.5rem;
+    transition: background 0.15s ease;
+  }
+
+  .btn-submit:hover { background: #fff; }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Back button */
+  .back-btn {
+    position: fixed;
+    top: 1.25rem;
+    left: 1.25rem;
+    background: none;
+    border: 1px solid #222;
+    border-radius: 8px;
+    color: #666;
+    font-size: 0.8rem;
+    font-family: inherit;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.15s, color 0.15s;
+    z-index: 90;
+  }
+
+  .back-btn:hover { border-color: #444; color: #d4d4d4; }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { animation: spin 0.8s linear infinite; }
+
+  .hidden { display: none !important; }
+
+  /* Results */
+  .results-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+
+  .results-greeting {
+    font-size: clamp(1.4rem, 3.5vw, 1.875rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: #f0f0f0;
+    margin-bottom: 0.35rem;
+  }
+
+  .results-sub {
+    font-size: 0.875rem;
+    color: #555;
+    margin-bottom: 2rem;
+  }
+
+  .price-block {
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: #0f0f0f;
+  }
+
+  .price-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 0.75rem;
+  }
+
+  .price-value {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: #f0f0f0;
+    line-height: 1;
+  }
+
+  .price-note {
+    font-size: 0.72rem;
+    color: #444;
+    margin-top: 0.5rem;
+  }
+
+  .selection-block {
+    border: 1px solid #1c1c1c;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    background: #0a0a0a;
+  }
+
+  .selection-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #444;
+    margin-bottom: 0.75rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    color: #888;
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 6px;
+    padding: 3px 10px;
+  }
+
+  .btn-wa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: #1a3d27;
+    border: 1px solid #166534;
+    color: #4ade80;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    margin-top: 1rem;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .btn-wa:hover { background: #1f4d30; border-color: #15803d; }
+
+  .results-footer {
+    font-size: 0.75rem;
+    color: #444;
+    margin-top: 1.25rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .divider {
+    height: 1px;
+    background: #1c1c1c;
+    margin: 1.25rem 0;
+  }
+
+  @media (max-width: 480px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .back-btn { top: 0.75rem; left: 0.75rem; }
+  }
+</style>
+
+<script>
+  const state = {
+    siteType: '', siteTypeLabel: '',
+    design: '', designLabel: '',
+    features: [] as {value:string,label:string,price:number}[],
+    timeline: '', timelineLabel: '',
+    budget: '', budgetLabel: '',
+    extras: [] as {value:string,label:string,price:number}[],
+    name: '', email: '', message: '',
+    currentStep: 1,
+  };
+
+  const TOTAL_STEPS = 7;
+
+  function updateProgress() {
+    const bar = document.getElementById('progress-bar');
+    if (bar) bar.style.width = `${(state.currentStep / TOTAL_STEPS) * 100}%`;
+  }
+
+  function showStep(n: number) {
+    document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
+    const id = n === 0 ? 'step-results' : `step-${n}`;
+    document.getElementById(id)?.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    state.currentStep = n === 0 ? TOTAL_STEPS : n;
+    updateProgress();
+    const backBtn = document.getElementById('back-btn') as HTMLElement;
+    backBtn.style.display = (n > 1 && n !== 0) ? 'flex' : 'none';
+  }
+
+  document.getElementById('back-btn')?.addEventListener('click', () => {
+    if (state.currentStep > 1) showStep(state.currentStep - 1);
+  });
+
+  // Step 1
+  document.querySelectorAll('#site-type-options .card').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.siteType = (btn as HTMLElement).dataset.value!;
+      state.siteTypeLabel = (btn as HTMLElement).dataset.label!;
+      showStep(2);
+    });
+  });
+
+  // Step 2
+  document.querySelectorAll('#design-options .row').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.design = (btn as HTMLElement).dataset.value!;
+      state.designLabel = (btn as HTMLElement).dataset.label!;
+      showStep(3);
+    });
+  });
+
+  // Step 3 multi
+  document.querySelectorAll('#features-options .card.multi').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const el = btn as HTMLElement;
+      const value = el.dataset.value!;
+      const idx = state.features.findIndex(f => f.value === value);
+      if (idx >= 0) { state.features.splice(idx, 1); el.classList.remove('selected'); }
+      else { state.features.push({ value, label: el.dataset.label!, price: parseInt(el.dataset.price||'0') }); el.classList.add('selected'); }
+    });
+  });
+  document.getElementById('features-next')?.addEventListener('click', () => showStep(4));
+
+  // Step 4
+  document.querySelectorAll('#timeline-options .row').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.timeline = (btn as HTMLElement).dataset.value!;
+      state.timelineLabel = (btn as HTMLElement).dataset.label!;
+      showStep(5);
+    });
+  });
+
+  // Step 5
+  document.querySelectorAll('#budget-options .row').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.budget = (btn as HTMLElement).dataset.value!;
+      state.budgetLabel = (btn as HTMLElement).dataset.label!;
+      showStep(6);
+    });
+  });
+
+  // Step 6 multi
+  document.querySelectorAll('#extras-options .card.multi').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const el = btn as HTMLElement;
+      const value = el.dataset.value!;
+      const idx = state.extras.findIndex(e => e.value === value);
+      if (idx >= 0) { state.extras.splice(idx, 1); el.classList.remove('selected'); }
+      else { state.extras.push({ value, label: el.dataset.label!, price: parseInt(el.dataset.price||'0') }); el.classList.add('selected'); }
+    });
+  });
+  document.getElementById('extras-next')?.addEventListener('click', () => showStep(7));
+
+  // Step 7 form
+  document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById('f-name') as HTMLInputElement;
+    const emailInput = document.getElementById('f-email') as HTMLInputElement;
+    const msgInput = document.getElementById('f-msg') as HTMLTextAreaElement;
+    const nameErr = document.getElementById('name-error')!;
+    const emailErr = document.getElementById('email-error')!;
+
+    nameInput.classList.remove('err'); nameErr.classList.remove('show');
+    emailInput.classList.remove('err'); emailErr.classList.remove('show');
+
+    let ok = true;
+    if (!nameInput.value.trim()) { nameInput.classList.add('err'); nameErr.classList.add('show'); ok = false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) { emailInput.classList.add('err'); emailErr.classList.add('show'); ok = false; }
+    if (!ok) return;
+
+    state.name = nameInput.value.trim();
+    state.email = emailInput.value.trim();
+    state.message = msgInput?.value.trim() || '';
+
+    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+    btn.disabled = true;
+    document.getElementById('submit-text')!.style.display = 'none';
+    document.getElementById('submit-loading')!.style.display = 'flex';
+
+    const { low, high } = calcPrice();
+    window.open(buildWaUrl(low, high), '_blank', 'noopener');
+    setTimeout(() => { renderResults(low, high); showStep(0); }, 400);
+  });
+
+  function calcPrice() {
+    const base: Record<string,[number,number]> = {
+      landing:[4000,9000], brochure:[8000,18000], ecommerce:[15000,35000],
+      webapp:[25000,60000], blog:[5000,12000], other:[6000,20000],
+    };
+    const dm: Record<string,number> = { template:1, custom:1.4, premium:1.9 };
+    const tm: Record<string,number> = { urgent:1.3, normal:1, flexible:0.9 };
+    const [bl,bh] = base[state.siteType]||[5000,15000];
+    const fp = state.features.reduce((s,f)=>s+f.price,0);
+    const ep = state.extras.reduce((s,e)=>s+e.price,0);
+    const d = dm[state.design]||1, t = tm[state.timeline]||1;
+    return {
+      low:  Math.round((bl*d*t+fp+ep)/500)*500,
+      high: Math.round((bh*d*t+fp+ep)/500)*500,
+    };
+  }
+
+  function fmt(n: number) {
+    return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(n);
+  }
+
+  function buildWaUrl(low: number, high: number) {
+    const feat = state.features.length ? state.features.map(f=>`  • ${f.label}`).join('\n') : '  • Ninguna';
+    const ext = state.extras.length ? state.extras.map(e=>`  • ${e.label}`).join('\n') : '  • Ninguno';
+    const msg = [
+      '👋 *Nuevo lead — Calculadora de precios*','',
+      `👤 *Nombre:* ${state.name}`,`📧 *Email:* ${state.email}`,'',
+      `🌐 *Tipo:* ${state.siteTypeLabel}`,`🎨 *Diseño:* ${state.designLabel}`,'',
+      `⚙️ *Funcionalidades:*`,feat,'',`🔧 *Extras:*`,ext,'',
+      `⏱ *Plazo:* ${state.timelineLabel}`,`💰 *Presupuesto:* ${state.budgetLabel}`,'',
+      `📊 *Estimado:* ${fmt(low)} – ${fmt(high)} MXN`,
+      state.message ? `\n💬 *Mensaje:* ${state.message}` : '',
+    ].filter(Boolean).join('\n');
+    return `https://wa.me/528014723664?text=${encodeURIComponent(msg)}`;
+  }
+
+  function renderResults(low: number, high: number) {
+    const all = [...state.features, ...state.extras];
+    const waUrl = buildWaUrl(low, high);
+    document.getElementById('results-content')!.innerHTML = `
+      <p class="results-eyebrow">Tu estimado</p>
+      <h2 class="results-greeting">Hola, ${state.name}</h2>
+      <p class="results-sub">Basado en lo que me contaste, aquí va tu rango de inversión.</p>
+
+      <div class="price-block">
+        <p class="price-label">Inversión estimada</p>
+        <p class="price-value">${fmt(low)} – ${fmt(high)}</p>
+        <p class="price-note">MXN · estimado orientativo, no vinculante</p>
+      </div>
+
+      <div class="selection-block">
+        <p class="selection-label">Tu selección</p>
+        <div class="tags">
+          <span class="tag">${state.siteTypeLabel}</span>
+          <span class="tag">${state.designLabel}</span>
+          <span class="tag">${state.timelineLabel}</span>
+          ${all.map(f=>`<span class="tag">${f.label}</span>`).join('')}
+        </div>
+      </div>
+
+      <a href="${waUrl}" target="_blank" rel="noopener" class="btn-wa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Hablar por WhatsApp
+      </a>
+
+      <div class="divider"></div>
+      <p class="results-footer">
+        Este estimado puede variar según los detalles del proyecto.<br>
+        Me pondré en contacto a <strong style="color:#666">${state.email}</strong> si quieres una propuesta formal.
+      </p>
+    `;
+  }
+
+  updateProgress();
+</script>
